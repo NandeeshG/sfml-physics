@@ -15,12 +15,11 @@ namespace my {
 
 class Background : public Handler, public Drawable {
 public:
-    Background(my::Textures&, sf::Vector2f);
+    Background(sf::Vector2f);
     void add_layer(TEXTURE);
     std::vector<std::unique_ptr<sf::Drawable>> draw_list() override;
 
 private:
-    Textures _texture_provider;
     std::vector<sf::Texture> _textures;
     std::vector<TEXTURE> _texture_types;
     std::vector<sf::Sprite> _sprites;

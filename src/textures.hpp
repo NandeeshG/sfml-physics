@@ -7,26 +7,54 @@
 #include <string>
 #include <unordered_map>
 
+#include "constants.hpp"
+
 namespace my {
 
-enum TEXTURE {
-    TX_BG4,
-    TX_BONES,
-    TX_TREE,
-    TX_ORB
-};
+class TextureLib {
+    /**
+     * Class to manage all the Textures present with us.
+     * Parses the base_dir recursively and reads all pngs as textures.
+     * Creates a dot separated name to texture map.
+     */
 
-class Textures {
+    /**
+     * Private constructor
+     */
+    TextureLib();
+
+    /**
+     * Makes the _textures map
+     */
+    void initTextureMap(std::string base_dir = MEDIA_DIR);
+
+    /**
+     * Init the singleton and calls make_map.
+     */
+    static TextureLib& getInstance();
+
+    /**
+     * Map from full path to texture object.
+     */
+    std::unordered_map<std::string, sf::Texture> _textures;
+
+    /**
+     * The base dir to begin dfs in
+     */
+    std::string _base_dir = "";
+
+    TextureLib(TextureLib const&) = delete;
+    TextureLib& operator=(TextureLib const&) = delete;
+    TextureLib(TextureLib const&&) = delete;
+    TextureLib& operator=(TextureLib const&&) = delete;
+
+    static TextureLib* _instance;
+
 public:
-    Textures(std::string base_dir);
-    Textures(std::string base_dir, sf::Vector2f tx_scale);
-    sf::Texture getTexture(TEXTURE t);
-    sf::Vector2f getTextureScale(TEXTURE t);
-
-private:
-    std::string _base_dir;
-    std::unordered_map<TEXTURE, sf::Texture> _tx_map;
-    sf::Vector2f _tx_scale;
+    /**
+     * Gets a copy of the requested texture
+     */
+    static sf::Texture getTexture(TEXTURE t);
 };
 
 }

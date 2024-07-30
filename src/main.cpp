@@ -10,20 +10,18 @@
 #include "textures.hpp"
 #include "utility.hpp"
 
-const sf::Vector2f TX_SCALE = { 1920, 1080 };
 const sf::Vector2f WIN_SCALE = { 1366, 768 };
 
 int main()
 {
-    my::Textures texture_provider("media", TX_SCALE);
+    my::Background background(WIN_SCALE);
+    background.add_layer(my::TEXTURE::BG4);
 
-    my::Background background(texture_provider, WIN_SCALE);
-    background.add_layer(my::TEXTURE::TX_BG4);
-
-    my::Field field(texture_provider, sf::FloatRect(100, 100, WIN_SCALE.x - 200, WIN_SCALE.y - 200));
+    my::Field field(sf::FloatRect(100, 100, WIN_SCALE.x - 200, WIN_SCALE.y - 200));
 
     auto window = sf::RenderWindow(sf::VideoMode(WIN_SCALE.x, WIN_SCALE.y), "Physics Project");
     window.setFramerateLimit(144);
+
     while (window.isOpen()) {
         for (auto event = sf::Event {}; window.pollEvent(event);) {
             switch (event.type) {

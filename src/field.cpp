@@ -11,8 +11,7 @@
 
 namespace my {
 
-Field::Field(Textures tex_prov, sf::FloatRect bounding_rect)
-    : _texture_provider(tex_prov)
+Field::Field(sf::FloatRect bounding_rect)
 {
     _bounding_rect = sf::RectangleShape(bounding_rect.getSize());
     _bounding_rect.setPosition(bounding_rect.getPosition());
@@ -86,7 +85,7 @@ void Field::handle_drawing_ball(sf::Event::MouseButtonEvent e)
     } else {
         double radius = my::distance(_new_ball_center, sf::Vector2f(e.x, e.y));
         _balls.emplace_back(radius, _new_ball_center);
-        // _balls.back().setTexture(_texture_provider.getTexture(my::TEXTURE::TX_ORB));
+        _balls.back().setTexture(TextureLib::getTexture(my::TEXTURE::ICON_ORB));
 
         reset_drawing();
     }

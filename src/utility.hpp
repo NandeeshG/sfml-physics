@@ -4,11 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
-namespace my {
+#include "constants.hpp"
 
-const double PI = 3.14159265;
-// const float PIXEL_PER_METER = 3779.52;
-const float PIXEL_PER_METER = 377.952;
+namespace my {
 
 /**
  * Returns the angle from horizontal b/w 0 and 180 degrees.

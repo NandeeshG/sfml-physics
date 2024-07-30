@@ -1,54 +1,52 @@
 #include <SFML/Graphics.hpp>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
+#include "constants.hpp"
 #include "textures.hpp"
 
 namespace my {
 
-namespace {
-    std::unordered_map<TEXTURE, std::string> file_map = {
-        { TX_BG4, "/Battleground4/Bright/Battleground4.png" },
-        { TX_BONES, "/Battleground4/Bright/bones.png" },
-        { TX_TREE, "/Battleground4/Bright/tree.png" },
-        { TX_ORB, "/Icons/Icons_22.png" }
-    };
+TextureLib* TextureLib::_instance = nullptr;
+
+TextureLib::TextureLib() { }
+
+TextureLib& TextureLib::getInstance()
+{
+    if (_instance)
+        return *_instance;
+
+    _instance = new TextureLib();
+    _instance->initTextureMap();
+    return *_instance;
 }
 
-Textures::Textures(std::string base_dir)
+void TextureLib::initTextureMap(std::string base_dir)
 {
-    _base_dir = base_dir;
-}
-
-Textures::Textures(std::string base_dir, sf::Vector2f tx_scale)
-{
-    _tx_scale = tx_scale;
-    _base_dir = base_dir;
-}
-
-sf::Texture Textures::getTexture(TEXTURE t)
-{
-    if (_tx_map.count(t)) {
-        return _tx_map[t];
-    } else if (file_map.count(t)) {
-        _tx_map[t] = sf::Texture();
-        if (!_tx_map[t].loadFromFile(_base_dir + file_map[t])) {
-            std::cout << "ERROR: Unable to load " << file_map[t] << std::endl;
-            _tx_map.erase(t);
-            return sf::Texture();
+    for (const auto& dirEntry : std::filesystem::recursive_directory_iterator("media")) {
+        std::string ext = ".png";
+        std::string path = dirEntry.path().string();
+        if (path.size() > ext.size() and path.substr(path.size() - ext.size()) == ext) {
+            _textures[path] = sf::Texture();
+            if (!_textures[path].loadFromFile(path)) {
+                std::cout << "ERROR: Unable to load " << path << std::endl;
+                _textures.erase(path);
+            }
         }
-        return _tx_map[t];
-    } else {
-        std::cout << "ERROR: No file path for TEXTURE " << t << std::endl;
-        return sf::Texture();
     }
 }
 
-sf::Vector2f Textures::getTextureScale(TEXTURE t)
+sf::Texture TextureLib::getTexture(TEXTURE t)
 {
-    return _tx_scale;
+    const auto& path = TEXTURE_PATH(t);
+    if (getInstance()._textures.count(path)) {
+        return getInstance()._textures[path];
+    }
+    std::cout << "ERROR: Unable to find texture for " << path << std::endl;
+    return sf::Texture();
 }
 
 }

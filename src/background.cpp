@@ -5,12 +5,12 @@
 #include <unordered_map>
 
 #include "background.hpp"
+#include "constants.hpp"
 #include "textures.hpp"
 
 namespace my {
 
-Background::Background(my::Textures& tex_provider, sf::Vector2f window_size)
-    : _texture_provider(tex_provider)
+Background::Background(sf::Vector2f window_size)
 {
     _window_size = window_size;
 }
@@ -18,12 +18,11 @@ Background::Background(my::Textures& tex_provider, sf::Vector2f window_size)
 void Background::add_layer(TEXTURE t)
 {
     _texture_types.push_back(t);
-    _textures.push_back(_texture_provider.getTexture(t));
-    sf::Vector2f scale = _texture_provider.getTextureScale(t);
+    _textures.push_back(TextureLib::getTexture(t));
 
     sf::Sprite bg;
     bg.setTexture(_textures.back());
-    bg.scale(sf::Vector2f(_window_size.x / scale.x, _window_size.y / scale.y));
+    bg.scale(sf::Vector2f(_window_size.x / TEX_SCALE.x, _window_size.y / TEX_SCALE.y));
     // bg.setColor(sf::Color(bg_color.b, bg_color.r, bg_color.g, bg_color.a + 256 / 2));
 
     _sprites.push_back(bg);

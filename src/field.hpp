@@ -31,7 +31,7 @@ inline DRAW_MODE switch_draw_mode(DRAW_MODE c)
 
 class Field : public Handler, public Drawable {
 public:
-    Field(my::Textures texture_provider, sf::FloatRect bounding_rect);
+    Field(sf::FloatRect bounding_rect);
     std::vector<std::unique_ptr<sf::Drawable>> draw_list() override;
 
 private:
@@ -44,8 +44,6 @@ private:
     my::Ball _ghost_ball;
     my::Line _ghost_line;
     sf::Vector2f _ghost_line_start;
-
-    my::Textures _texture_provider;
 
     DRAW_MODE _draw_mode = DM_LINE;
 
